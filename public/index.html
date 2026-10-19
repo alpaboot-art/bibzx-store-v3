@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBZX STORE - Marketplace Akun Game & Premium Apps</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        dark: { base: '#080c14', card: '#0f172a', border: '#1e293b' },
+                        neon: { cyan: '#00f2fe', blue: '#4facfe', purple: '#9333ea', green: '#10b981' }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 20px rgba(0, 242, 254, 0.35)',
+                        'neon-green': '0 0 20px rgba(16, 185, 129, 0.35)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .gradient-text-cyan {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-dark-base text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="app.switchView('public')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-pink-500 p-[2px] shadow-neon-cyan flex-shrink-0">
+                    <div class="w-full h-full bg-dark-base rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-cyan-400 text-lg"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-white">BIBZX<span class="gradient-text-cyan">STORE</span></h1>
+                    <p class="text-[10px] text-slate-400 font-medium tracking-widest uppercase">Verified Gaming Store</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="btn-toggle-admin" onclick="app.handleAdminToggle()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 border border-slate-700 text-slate-300">
+                    <i class="fa-solid fa-lock text-cyan-400" id="admin-icon"></i>
+                    <span id="admin-btn-text">Admin Portal</span>
+                </button>
+                <a href="https://wa.me/6283862188011" target="_blank" class="px-3 py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span class="hidden sm:inline">CS Response</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <section id="public-view" class="space-y-6">
+            <div class="relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 p-6">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Pusat Akun Game & Premium <span class="gradient-text-cyan">Instan QRIS</span></h2>
+                <p class="text-slate-300 text-xs sm:text-sm mt-2">Beli langsung via QRIS otomatis Midtrans dan dapatkan data akun seketika!</p>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+        </section>
+
+        <!-- Admin View -->
+        <section id="admin-view" class="hidden space-y-6">
+            <div class="bg-dark-card border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h3 class="text-base font-bold text-white">Tambah Produk Baru</h3>
+                <form id="product-form" onsubmit="app.saveProduct(event)" class="space-y-4">
+                    <input type="text" id="form-title-input" required placeholder="Judul Akun" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                    <input type="number" id="form-price-input" required placeholder="Harga (Rp)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                    <input type="url" id="form-image-input" placeholder="URL Gambar" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                    <textarea id="form-specs-input" required placeholder="Deskripsi Publik" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-white"></textarea>
+                    <textarea id="form-credentials-input" required placeholder="Data Rahasia Akun (Email & Password)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-amber-300 font-mono"></textarea>
+                    <button type="submit" class="w-full py-3 bg-cyan-500 text-black font-bold text-xs uppercase rounded-xl">Simpan Ke Database</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="bg-dark-card border border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 relative">
+            <button onclick="app.closeDetailModal()" class="absolute top-3 right-3 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="modal-title" class="text-lg font-extrabold text-white"></h3>
+            <div id="modal-price" class="text-xl font-black text-cyan-300"></div>
+            <p id="modal-specs" class="text-xs text-slate-300 whitespace-pre-line bg-slate-950 p-3 rounded-xl"></p>
+            <button id="modal-web-pay-btn" onclick="app.createMidtransOrder()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-black font-extrabold text-xs uppercase rounded-xl">
+                Bayar QRIS Real Midtrans
+            </button>
+        </div>
+    </div>
+
+    <!-- QRIS Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden">
+        <div class="bg-dark-card border border-slate-800 rounded-2xl max-w-md w-full p-6 text-center space-y-4 relative">
+            <button onclick="app.closePaymentModal()" class="absolute top-3 right-3 text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div id="pay-step-qris" class="space-y-3">
+                <h3 class="text-base font-extrabold text-white">Scan QRIS Midtrans</h3>
+                <div class="w-48 h-48 mx-auto bg-white p-2 rounded-xl border-2 border-cyan-400 shadow-neon-cyan flex items-center justify-center">
+                    <img id="midtrans-qris-img" src="" alt="QRIS Code" class="w-full h-full object-contain">
+                </div>
+                <p class="text-xs text-amber-400 font-bold animate-pulse">Menunggu Pembayaran Masuk...</p>
+            </div>
+
+            <div id="pay-step-success" class="hidden space-y-3">
+                <h3 class="text-base font-extrabold text-emerald-400">🎉 Pembayaran Berhasil!</h3>
+                <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/40 text-left">
+                    <p class="text-[10px] font-bold text-emerald-400 uppercase">DATA AKUN RAHASIA KAMU:</p>
+                    <pre id="revealed-credentials-text" class="text-xs text-amber-300 font-mono whitespace-pre-line mt-2"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class BibzxStoreApp {
+            constructor() {
+                this.activeProduct = null;
+                this.pollTimer = null;
+                this.init();
+            }
+
+            async init() {
+                await this.loadProducts();
+            }
+
+            async loadProducts() {
+                try {
+                    const res = await fetch('/api/products');
+                    const data = await res.json();
+                    this.renderGrid(data);
+                } catch (e) {
+                    console.error("Gagal load produk backend");
+                }
+            }
+
+            renderGrid(products) {
+                const grid = document.getElementById('product-grid');
+                if (!products || products.length === 0) {
+                    grid.innerHTML = '<p class="text-slate-400 text-xs">Belum ada akun di toko. Silakan tambah via Admin Portal.</p>';
+                    return;
+                }
+                grid.innerHTML = products.map(p => `
+                    <div class="bg-dark-card border border-slate-800 rounded-2xl p-4 space-y-3">
+                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f'}" class="w-full h-36 object-cover rounded-xl">
+                        <h3 class="font-bold text-sm text-white">${p.title}</h3>
+                        <div class="text-cyan-300 font-extrabold">Rp ${p.price.toLocaleString('id-ID')}</div>
+                        <button onclick="app.openDetailModal(${p.id}, '${p.title}', ${p.price}, '${p.description || ''}', '${p.status}')" 
+                                class="w-full py-2 bg-cyan-500/10 hover:bg-cyan-500 text-cyan-300 hover:text-black rounded-xl text-xs font-bold">
+                            ${p.status === 'sold' ? 'SOLD OUT' : 'Beli via QRIS'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            openDetailModal(id, title, price, specs, status) {
+                if (status === 'sold') return;
+                this.activeProduct = { id, title, price, specs };
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-price').innerText = `Rp ${price.toLocaleString('id-ID')}`;
+                document.getElementById('modal-specs').innerText = specs;
+                document.getElementById('detail-modal').classList.remove('hidden');
+            }
+
+            closeDetailModal() {
+                document.getElementById('detail-modal').classList.add('hidden');
+            }
+
+            async createMidtransOrder() {
+                this.closeDetailModal();
+                document.getElementById('pay-step-qris').classList.remove('hidden');
+                document.getElementById('pay-step-success').classList.add('hidden');
+                document.getElementById('payment-modal').classList.remove('hidden');
+
+                const res = await fetch('/api/orders/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: this.activeProduct.id })
+                });
+                const data = await res.json();
+                
+                if (!data.success) return alert(data.error);
+
+                document.getElementById('midtrans-qris-img').src = data.qrisUrl;
+
+                this.pollTimer = setInterval(async () => {
+                    const statusRes = await fetch(`/api/orders/${data.orderId}`);
+                    const statusData = await statusRes.json();
+                    
+                    if (statusData.status === 'PAID') {
+                        clearInterval(this.pollTimer);
+                        document.getElementById('pay-step-qris').classList.add('hidden');
+                        document.getElementById('pay-step-success').classList.remove('hidden');
+                        document.getElementById('revealed-credentials-text').innerText = statusData.accountData;
+                        this.loadProducts();
+                    }
+                }, 3000);
+            }
+
+            closePaymentModal() {
+                if (this.pollTimer) clearInterval(this.pollTimer);
+                document.getElementById('payment-modal').classList.add('hidden');
+            }
+
+            async saveProduct(e) {
+                e.preventDefault();
+                await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: document.getElementById('form-title-input').value,
+                        price: parseInt(document.getElementById('form-price-input').value),
+                        imageUrl: document.getElementById('form-image-input').value,
+                        description: document.getElementById('form-specs-input').value,
+                        accountData: document.getElementById('form-credentials-input').value
+                    })
+                });
+                document.getElementById('product-form').reset();
+                this.switchView('public');
+                this.loadProducts();
+            }
+
+            switchView(view) {
+                document.getElementById('public-view').classList.toggle('hidden', view !== 'public');
+                document.getElementById('admin-view').classList.toggle('hidden', view !== 'admin');
+            }
+
+            handleAdminToggle() {
+                const isPublic = document.getElementById('admin-view').classList.contains('hidden');
+                if (isPublic) {
+                    const password = prompt("Masukkan Password Admin:");
+                    if (password !== "bibzxstore77") {
+                        alert("Password Admin Salah!");
+                        return;
+                    }
+                }
+                this.switchView(isPublic ? 'admin' : 'public');
+            }
+        }
+
+        let app;
+        window.addEventListener('DOMContentLoaded', () => { app = new BibzxStoreApp(); });
+    </script>
+</body>
+  </html>
+  
