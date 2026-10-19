@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBZX STORE - Marketplace Akun Game & Premium Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #080c14; color: #f1f5f9; }
+        .gradient-text { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="app.switchView('public')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg">B</div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-white">BIBZX<span class="gradient-text">STORE</span></h1>
+                    <p class="text-[10px] text-slate-400 font-medium tracking-widest uppercase">Verified Gaming Store</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="app.handleAdminToggle()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white"><i class="fa-solid fa-lock text-cyan-400 mr-1"></i> Admin Portal</button>
+                <a href="https://wa.me/6283862188011" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> CS Response</a>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <section id="public-view" class="space-y-6">
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-purple-950 border border-slate-800 p-6">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Pusat Akun Game & Premium <span class="gradient-text">Instan Direct</span></h2>
+                <p class="text-slate-300 text-xs sm:text-sm mt-1">Beli langsung via QRIS / WhatsApp dan dapatkan akun impianmu seketika!</p>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+        </section>
+        <section id="admin-view" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <h3 class="text-base font-bold text-white"><i class="fa-solid fa-user-shield text-purple-400 mr-2"></i>Tambah Produk Baru</h3>
+                    <span class="text-xs text-slate-500">Sandi Admin: <code class="text-cyan-400">bibzxstore77</code></span>
+                </div>
+                <form id="product-form" onsubmit="app.saveProduct(event)" class="space-y-4">
+                    <div><label for="form-title" class="text-xs font-semibold text-slate-300">Judul Akun</label><input type="text" id="form-title" required placeholder="Contoh: Akun FF Sultan S1 Old" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white mt-1"></div>
+                    <div><label for="form-price" class="text-xs font-semibold text-slate-300">Harga (Rp)</label><input type="number" id="form-price" min="1" required placeholder="150000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white mt-1"></div>
+                    <div><label for="form-image" class="text-xs font-semibold text-slate-300">URL Gambar (Opsional)</label><input type="url" id="form-image" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white mt-1"></div>
+                    <div><label for="form-specs" class="text-xs font-semibold text-slate-300">Deskripsi / Spesifikasi Publik</label><textarea id="form-specs" required placeholder="Spesifikasi akun..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-white mt-1"></textarea></div>
+                    <div><label for="form-credentials" class="text-xs font-bold text-amber-400">Data Rahasia Akun (Email & Password)</label><textarea id="form-credentials" required placeholder="Email: user@gmail.com&#10;Password: pass123" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-amber-300 font-mono mt-1"></textarea></div>
+                    <button type="submit" class="w-full py-3 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-xs uppercase rounded-xl transition-all">Simpan Ke Katalog Web</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 relative">
+            <button onclick="app.closeModal('detail-modal')" aria-label="Tutup" class="absolute top-3 right-3 text-slate-400 hover:text-white">✕</button>
+            <h3 id="modal-title" class="text-lg font-extrabold text-white"></h3>
+            <div id="modal-price" class="text-xl font-black text-cyan-300"></div>
+            <p id="modal-specs" class="text-xs text-slate-300 whitespace-pre-line bg-slate-950 p-3 rounded-xl border border-slate-800"></p>
+            <div class="space-y-2 pt-2">
+                <a id="modal-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs uppercase rounded-xl flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-base"></i> Beli via WhatsApp CS</a>
+                <button onclick="app.openPaymentModal()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-slate-950 font-extrabold text-xs uppercase rounded-xl">Bayar via QRIS Instan</button>
+            </div>
+        </div>
+    </div>
+    <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-center space-y-4 relative">
+            <button onclick="app.closeModal('payment-modal')" aria-label="Tutup" class="absolute top-3 right-3 text-slate-400 hover:text-white">✕</button>
+            <div id="pay-step-qris" class="space-y-3">
+                <h3 class="text-base font-extrabold text-white">Scan QRIS Untuk Membayar</h3>
+                <div class="w-48 h-48 mx-auto bg-white p-2 rounded-xl border-2 border-cyan-400 flex items-center justify-center"><img id="midtrans-qris-img" src="" alt="QRIS Code" class="w-full h-full object-contain"></div>
+                <p class="text-xs text-amber-400 font-bold">DEMO: QR ini bukan QRIS pembayaran sungguhan.</p>
+                <button onclick="app.confirmSimulatedPay()" class="w-full py-3 bg-emerald-500 text-slate-950 font-extrabold text-xs uppercase rounded-xl">Konfirmasi Pembayaran (DEMO)</button>
+            </div>
+            <div id="pay-step-success" class="hidden space-y-3 text-left">
+                <h3 class="text-base font-extrabold text-emerald-400">🎉 Simulasi Selesai</h3>
+                <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/40 space-y-2"><p class="text-[10px] font-bold text-emerald-400 uppercase">DATA AKUN (DEMO):</p><pre id="revealed-credentials-text" class="text-xs text-amber-300 font-mono whitespace-pre-line leading-relaxed"></pre></div>
+                <p class="text-xs text-amber-300">Jangan gunakan tombol demo ini untuk transaksi sungguhan. Verifikasi pembayaran perlu backend dan penyedia QRIS.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        class BibzxStoreApp {
+            constructor() {
+                this.waNumber = "6283862188011";
+                this.activeProduct = null;
+                this.products = this.loadProducts();
+                this.init();
+            }
+            init() { this.renderGrid(); }
+            loadProducts() {
+                try {
+                    const saved = localStorage.getItem('bibzx_store_items');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) return parsed;
+                    }
+                } catch (error) { console.warn('Data produk lokal tidak dapat dibaca.', error); }
+                return [
+                    { id: 1, title: "Free Fire Sultan S1-S5 Old Weapon", price: 150000, specs: "• EP S1-S5 Old\n• Cobra MP40 Max\n• Vault 400+ Skin", image_url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500", credentials: "CONTOH DATA DEMO — ganti dengan data milik Anda sendiri.", status: "ready" },
+                    { id: 2, title: "Canva Pro 1 Tahun Private Email", price: 25000, specs: "• Akses Pro 1 Tahun\n• Pakai Email Sendiri\n• Legal & Bergaransi", image_url: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500", credentials: "CONTOH DATA DEMO — ganti dengan data milik Anda sendiri.", status: "ready" }
+                ];
+            }
+            saveProductsToStorage() {
+                try { localStorage.setItem('bibzx_store_items', JSON.stringify(this.products)); }
+                catch (error) { alert('Produk tidak dapat disimpan di browser ini.'); }
+            }
+            escapeHTML(value) {
+                return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+            }
+            renderGrid() {
+                const grid = document.getElementById('product-grid');
+                grid.innerHTML = this.products.map(p => `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 relative overflow-hidden">
+                        ${p.status === 'sold' ? '<div class="absolute top-3 right-3 bg-rose-500 text-white font-black text-[10px] px-2 py-0.5 rounded">SOLD OUT</div>' : ''}
+                        <img src="${this.escapeHTML(p.image_url || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500')}" alt="${this.escapeHTML(p.title)}" class="w-full h-36 object-cover rounded-xl bg-slate-950">
+                        <h3 class="font-bold text-sm text-white line-clamp-1">${this.escapeHTML(p.title)}</h3>
+                        <div class="text-cyan-300 font-extrabold">Rp ${Number(p.price).toLocaleString('id-ID')}</div>
+                        <button onclick="app.openDetailModal(${Number(p.id)})" class="w-full py-2 bg-cyan-500/10 hover:bg-cyan-400 hover:text-black border border-cyan-500/30 text-cyan-300 rounded-xl text-xs font-bold transition-all">${p.status === 'sold' ? 'SOLD OUT' : 'Detail / Beli'}</button>
+                    </div>`).join('');
+            }
+            openDetailModal(id) {
+                const p = this.products.find(x => x.id === id);
+                if (!p || p.status === 'sold') return;
+                this.activeProduct = p;
+                document.getElementById('modal-title').innerText = p.title;
+                document.getElementById('modal-price').innerText = `Rp ${Number(p.price).toLocaleString('id-ID')}`;
+                document.getElementById('modal-specs').innerText = p.specs;
+                const msg = encodeURIComponent(`Halo Admin BIBZX Store!\nSaya mau order produk:\n\n📌 Nama: ${p.title}\n💰 Harga: Rp ${Number(p.price).toLocaleString('id-ID')}`);
+                document.getElementById('modal-wa-link').href = `https://wa.me/${this.waNumber}?text=${msg}`;
+                document.getElementById('detail-modal').classList.remove('hidden');
+            }
+            openPaymentModal() {
+                if (!this.activeProduct) return;
+                this.closeModal('detail-modal');
+                document.getElementById('pay-step-qris').classList.remove('hidden');
+                document.getElementById('pay-step-success').classList.add('hidden');
+                document.getElementById('midtrans-qris-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('DEMO_BIBZX_PAY_' + this.activeProduct.id + '_' + this.activeProduct.price)}`;
+                document.getElementById('payment-modal').classList.remove('hidden');
+            }
+            confirmSimulatedPay() {
+                if (!this.activeProduct) return;
+                document.getElementById('pay-step-qris').classList.add('hidden');
+                document.getElementById('pay-step-success').classList.remove('hidden');
+                document.getElementById('revealed-credentials-text').innerText = this.activeProduct.credentials;
+                // Demo only: no payment verification takes place.
+                this.activeProduct.status = 'sold';
+                this.saveProductsToStorage();
+                this.renderGrid();
+            }
+            closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+            handleAdminToggle() {
+                const isHidden = document.getElementById('admin-view').classList.contains('hidden');
+                if (isHidden) {
+                    const pass = prompt("Masukkan Password Admin:");
+                    if (pass !== "bibzxstore77") return alert("Password Admin Salah!");
+                    this.switchView('admin');
+                } else this.switchView('public');
+            }
+            switchView(v) {
+                document.getElementById('public-view').classList.toggle('hidden', v !== 'public');
+                document.getElementById('admin-view').classList.toggle('hidden', v !== 'admin');
+            }
+            saveProduct(e) {
+                e.preventDefault();
+                const title = document.getElementById('form-title').value.trim();
+                const price = Number(document.getElementById('form-price').value);
+                if (!title || !Number.isFinite(price) || price <= 0) return alert('Masukkan nama produk dan harga yang valid.');
+                const newP = {
+                    id: Date.now(), title, price,
+                    image_url: document.getElementById('form-image').value.trim() || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500',
+                    specs: document.getElementById('form-specs').value,
+                    credentials: document.getElementById('form-credentials').value,
+                    status: 'ready'
+                };
+                this.products.unshift(newP);
+                this.saveProductsToStorage();
+                document.getElementById('product-form').reset();
+                this.switchView('public');
+                this.renderGrid();
+            }
+        }
+        let app;
+        window.addEventListener('DOMContentLoaded', () => { app = new BibzxStoreApp(); });
+    </script>
+</body>
+</html>
